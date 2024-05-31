@@ -10,10 +10,11 @@ public class JogoDaSenha {
 
         String senha = gerarSenha(comprimento);
         System.out.println("\nSenha: " + senha); //depois deixar como comentário; serve como cola para testes
+        char[] senhaVetor = senha.toCharArray();
         String senhaEscondida = transformarSenha(senha, '*');
         System.out.println("ADIVINHE A SENHA: " + senhaEscondida);
 
-        verificador(senha);
+        verificador(senhaVetor);
     }
     
     public static String gerarSenha(int comprimento) {
@@ -30,17 +31,17 @@ public class JogoDaSenha {
         return senha.toString();
     }
 
-    public static String transformarSenha(String senha2, char substituto) {
+    public static String transformarSenha(String senha, char substituto) {
 
         StringBuilder senhaTransformada = new StringBuilder();
-        for (int i=0; i<senha2.length(); i++) {
+        for (int i=0; i<senha.length(); i++) {
             senhaTransformada.append(substituto);
         }
 
         return senhaTransformada.toString();
     }
 
-    public static void verificador(String senha){
+    public static void verificador(char[] senha){
         Scanner sc = new Scanner(System.in);
         int acertou=0;
 
@@ -48,11 +49,22 @@ public class JogoDaSenha {
             System.out.print("\nTENTATIVA: ");
             String tentativa = sc.next();
 
-            if (tentativa.equals(senha)) {
+            if (tentativa.equals(String.valueOf(senha))) {
                 System.out.println("PARABÉNS!! VOCÊ ACERTOUU");
                 break;
             } else {
-                System.out.println("SENHA INCORRETA! TENTE NOVAMENTE.");
+                 // Verificar se os números estão na senha e se estão na posição correta ou errada
+                 for (int i = 0; i < senha.length; i++) {
+                    if (tentativa.charAt(i) == senha[i]) {
+                        System.out.println(" está na posição correta.");
+                    } else if (String.valueOf(senha).contains(String.valueOf(tentativa.charAt(i)))) {
+                        System.out.println(" está na senha, mas na posição errada.");
+                    } else {
+                        System.out.println(" não está na senha.");
+                    }
+
+                //System.out.println("SENHA INCORRETA! TENTE NOVAMENTE.");
+                }
             }
         }while(acertou<11);
     }
