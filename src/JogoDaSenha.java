@@ -68,12 +68,12 @@ public class JogoDaSenha {
                     ponto--;
                     System.out.println("CHANCES RESTANTES: " + ponto);
                 }else if(ponto==0){
+                    System.out.println("\nSENHA INCORRETA! VOCÊ PERDEU SUAS CHANCES :(");
                     break;
                 }
             }
 
         }while(acertou<=10);
-        System.out.println("\nSENHA INCORRETA! VOCÊ PERDEU SUAS CHANCES :(");
     }
 
 }
