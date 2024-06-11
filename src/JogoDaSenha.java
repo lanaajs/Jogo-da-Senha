@@ -9,7 +9,7 @@ public class JogoDaSenha {
         System.out.println("\n\n\tBEM-VINDO AO JOGO DA SENHA");
 
         String senha = gerarSenha(comprimento);
-        System.out.println("\nSenha: " + senha); //depois deixar como comentário; serve como cola para testes
+        System.out.println("\nSenha: " + senha); // Esconder durante o jogo
         char[] senhaVetor = senha.toCharArray();
         String senhaEscondida = transformarSenha(senha, '*');
         System.out.println("ADIVINHE A SENHA: " + senhaEscondida);
@@ -18,12 +18,11 @@ public class JogoDaSenha {
     }
     
     public static String gerarSenha(int comprimento) {
-        
         String caracteres = "123456";
         SecureRandom random = new SecureRandom();
         StringBuilder senha = new StringBuilder();
 
-        for (int i=0; i<comprimento; i++) {
+        for (int i = 0; i < comprimento; i++) {
             int index = random.nextInt(caracteres.length());
             senha.append(caracteres.charAt(index));
         }
@@ -32,48 +31,57 @@ public class JogoDaSenha {
     }
 
     public static String transformarSenha(String senha, char substituto) {
-
         StringBuilder senhaTransformada = new StringBuilder();
-        for (int i=0; i<senha.length(); i++) {
+        for (int i = 0; i < senha.length(); i++) {
             senhaTransformada.append(substituto);
         }
-
         return senhaTransformada.toString();
     }
 
-    public static void verificador(char[] senha){
+    public static void verificador(char[] senha) {
         Scanner sc = new Scanner(System.in);
-        int acertou=0;
-        int ponto=10;
+        int ponto = 10;
 
-        do{
+        do {
+            int contCorretos = 0;
+            int contDigitosPosicaoErrada = 0; // Contador para números corretos na posição errada
+
             System.out.print("\nTENTATIVA: ");
             String tentativa = sc.next();
 
-            if (tentativa.equals(String.valueOf(senha))) {
-                System.out.println("PARABÉNS!! VOCÊ ACERTOUU");
-                break;
-            } else {
-                 for (int i = 0; i < senha.length; i++) {
-                    if (tentativa.charAt(i) == senha[i]) {
-                        System.out.println("\tPOSIÇÃO CORRETA");
-                    } else if (String.valueOf(senha).contains(String.valueOf(tentativa.charAt(i)))) {
-                        System.out.println("\tPOSIÇÃO ERRADA");
-                    } else {
-                        System.out.println("\tNÃO ESTÁ NA SENHA");
+            // Verifica se está na posição correta e incrementa os contadores
+            for (int i = 0; i < senha.length; i++) {
+                if (senha[i] == tentativa.charAt(i)) {
+                    contCorretos++;
+                } else {
+                    // Verifica se o número está correto, mas na posição errada
+                    for (int j = 0; j < senha.length; j++) {
+                        if (senha[j] == tentativa.charAt(i)) {
+                            contDigitosPosicaoErrada++;
+                            break;
+                        }
                     }
                 }
-
-                if(ponto > 0){
-                    ponto--;
-                    System.out.println("CHANCES RESTANTES: " + ponto);
-                }else if(ponto==0){
-                    System.out.println("\nSENHA INCORRETA! VOCÊ PERDEU SUAS CHANCES :(");
-                    break;
-                }
+            }
+    
+            System.out.println("\nPOSIÇÕES CORRETAS: " + contCorretos);
+            System.out.println("DIGITO NA POSIÇÃO ERRADA: " + contDigitosPosicaoErrada);
+            
+            // Verifica se todas as posições estão corretas
+            if (contCorretos == senha.length) {
+                System.out.println("\nPARABÉNS!! VOCÊ ACERTOU!");
+                break;
             }
 
-        }while(acertou<=10);
-    }
+            // Contagem de chances e verificação se o jogador perdeu
+            ponto--;
+            System.out.println("CHANCES RESTANTES: " + ponto);
 
+            if (ponto == 0) {
+                System.out.println("\nSENHA INCORRETA! VOCÊ PERDEU TODAS AS SUAS CHANCES :(");
+                break;
+            }
+
+        } while (true);
+    }
 }
